@@ -20,12 +20,10 @@ class AuthenticationError(APIClientError):
 class ClassDeepSeekHand:
     """独立的API处理模块"""
 
-    def __init__(self,logger=None):
+    def __init__(self, logger=None):
         self.client = None
-        self.logger = None
-        self._init_client()
-        self._init_logger()
         self.logger = logger or logging.getLogger("DeepSeekHand")
+        self._init_client()
         self.api_key = self._load_api_key()
 
     def _init_client(self):
@@ -60,29 +58,6 @@ class ClassDeepSeekHand:
                 raise RuntimeError(f"无法加载API密钥，请检查配置文件。")
         return api_key
 
-    def _init_logger(self):
-        """初始化日志系统"""
-        self.logger = logging.getLogger("DeepSeekAPI")
-        self.logger.setLevel(logging.INFO)
-
-        log_dir = os.path.join("./logs", "api")
-        os.makedirs(log_dir, exist_ok=True)
-
-        formatter = logging.Formatter(
-                '[%(asctime)s] %(levelname)s - %(message)s',
-                datefmt='%Y-%m-%d %H:%M:%S'
-                )
-
-        file_handler = logging.FileHandler(
-                filename=os.path.join(log_dir, "api_operations.log"),
-                encoding="utf-8"
-                )
-        file_handler.setFormatter(formatter)
-
-        # 防止重复添加handler
-        if not any(isinstance(h, logging.FileHandler) for h in self.logger.handlers):
-            self.logger.addHandler(file_handler)
-
     def close_logger(self):
         """关闭日志处理器"""
         for handler in self.logger.handlers[:]:
@@ -116,8 +91,6 @@ class ClassDeepSeekHand:
                     max_tokens=2000,
                     stream=False
                     )
-
-
             if not response.choices or not hasattr(response.choices[0], "message"):
                 raise ValueError("API返回的数据结构不符合预期")
             self.logger.info("API请求成功，返回数据已处理")
