@@ -1,16 +1,21 @@
-import os
 import logging
+import os
 
+import openai
 from openai import OpenAI
+
 
 class APIClientError(Exception):
     pass
 
-class ConnectionError(APIClientError):
+
+class APIConnectionError(APIClientError):
     pass
+
 
 class AuthenticationError(APIClientError):
     pass
+
 
 class ClassDeepSeekHand:
     """独立的API处理模块"""
@@ -25,10 +30,11 @@ class ClassDeepSeekHand:
         """初始化API客户端"""
         try:
             key_api = self._load_api_key()
+            link_base = "https://api.deepseek.com"
             self.client = OpenAI(
-                api_key = key_api,
-                base_url = link_base
-            )
+                    api_key=key_api,
+                    base_url=link_base
+                    )
             self._verify_connection()
         except Exception as e:
             raise RuntimeError(f"API初始化失败: {str(e)}")
@@ -42,6 +48,8 @@ class ClassDeepSeekHand:
             try:
                 with open(key_path, "r") as f:
                     api_key = f.read().strip()
+                    if not api_key:
+                        raise ValueError("API密钥文件为空")
             except FileNotFoundError:
                 raise RuntimeError(f"API密钥文件未找到：{key_path}")
         return api_key
@@ -55,49 +63,56 @@ class ClassDeepSeekHand:
         os.makedirs(log_dir, exist_ok=True)
 
         formatter = logging.Formatter(
-            '[%(asctime)s] %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-        )
+                '[%(asctime)s] %(levelname)s - %(message)s',
+                datefmt='%Y-%m-%d %H:%M:%S'
+                )
 
         file_handler = logging.FileHandler(
-            filename=os.path.join(log_dir, "api_operations.log"),
-            encoding="utf-8"
-        )
+                filename=os.path.join(log_dir, "api_operations.log"),
+                encoding="utf-8"
+                )
         file_handler.setFormatter(formatter)
 
-        self.logger.addHandler(file_handler)
+        # 防止重复添加handler
+        if not any(isinstance(h, logging.FileHandler) for h in self.logger.handlers):
+            self.logger.addHandler(file_handler)
+
+    def close_logger(self):
+        """关闭日志处理器"""
+        for handler in self.logger.handlers[:]:
+            handler.close()
+            self.logger.removeHandler(handler)
 
     def _verify_connection(self):
         try:
             self.client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[{"role": "system", "content": "connection test"}],
-                max_tokens=1
-            )
+                    model="deepseek-chat",
+                    messages=[{"role": "system", "content": "connection test"}],
+                    max_tokens=1
+                    )
         except openai.AuthenticationError as e:
             raise AuthenticationError(f"API认证失败: {str(e)}")
         except openai.APIConnectionError as e:
-            raise ConnectionError(f"API连接失败: {str(e)}")
+            raise APIConnectionError(f"API连接失败: {str(e)}")
         except Exception as e:
             raise APIClientError(f"未知错误: {str(e)}")
 
     def process_request(self, system_prompt, user_content):
-        """处理API请求"""
         try:
             response = self.client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_content}
-                ],
-                temperature=0.7,
-                max_tokens=2000,
-                stream=False
-            )
+                    model="deepseek-chat",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_content}
+                        ],
+                    temperature=0.7,
+                    max_tokens=2000,
+                    stream=False
+                    )
+            if not response.choices or not hasattr(response.choices[0], "message"):
+                raise ValueError("API返回的数据结构不符合预期")
             self.logger.info(f"成功处理 {len(user_content)} 字符的请求")
             return response.choices[0].message.content
         except Exception as e:
             self.logger.error(f"请求处理失败: {str(e)}")
             raise
-
-link_base = "https://api.deepseek.com"
