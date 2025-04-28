@@ -3,6 +3,15 @@ import logging
 
 from openai import OpenAI
 
+class APIClientError(Exception):
+    pass
+
+class ConnectionError(APIClientError):
+    pass
+
+class AuthenticationError(APIClientError):
+    pass
+
 class ClassDeepSeekHand:
     """独立的API处理模块"""
 
@@ -15,10 +24,10 @@ class ClassDeepSeekHand:
     def _init_client(self):
         """初始化API客户端"""
         try:
-            api_key = self._load_api_key()
+            key_api = self._load_api_key()
             self.client = OpenAI(
-                api_key=api_key,
-                base_url="https://api.deepseek.com"
+                api_key = key_api,
+                base_url = link_base
             )
             self._verify_connection()
         except Exception as e:
@@ -42,7 +51,7 @@ class ClassDeepSeekHand:
         self.logger = logging.getLogger("DeepSeekAPI")
         self.logger.setLevel(logging.INFO)
 
-        log_dir = os.path.join("logs", "api")
+        log_dir = os.path.join("./logs", "api")
         os.makedirs(log_dir, exist_ok=True)
 
         formatter = logging.Formatter(
@@ -59,15 +68,18 @@ class ClassDeepSeekHand:
         self.logger.addHandler(file_handler)
 
     def _verify_connection(self):
-        """验证API连通性"""
         try:
             self.client.chat.completions.create(
                 model="deepseek-chat",
                 messages=[{"role": "system", "content": "connection test"}],
                 max_tokens=1
             )
+        except openai.AuthenticationError as e:
+            raise AuthenticationError(f"API认证失败: {str(e)}")
+        except openai.APIConnectionError as e:
+            raise ConnectionError(f"API连接失败: {str(e)}")
         except Exception as e:
-            raise RuntimeError(f"API连接测试失败: {str(e)}")
+            raise APIClientError(f"未知错误: {str(e)}")
 
     def process_request(self, system_prompt, user_content):
         """处理API请求"""
@@ -87,3 +99,5 @@ class ClassDeepSeekHand:
         except Exception as e:
             self.logger.error(f"请求处理失败: {str(e)}")
             raise
+
+link_base = "https://api.deepseek.com"
