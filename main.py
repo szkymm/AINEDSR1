@@ -25,8 +25,12 @@ class NovelEditorSystem:
         self.logger = logging.getLogger("NovelEditorSystem")
         self.logger.setLevel(logging.INFO)
 
-        log_dir = os.path.join(self.base_dir, "logs", "main")
+        log_dir = os.path.join(self.base_dir, "logs")
         os.makedirs(log_dir, exist_ok=True)
+
+        # 生成符合格式的日志文件名
+        timestamp = datetime.now().strftime("%m%d_%H%M")
+        log_filename = f"logs_{timestamp}.log"
 
         formatter = logging.Formatter(
                 '[%(asctime)s] %(levelname)s - %(message)s',
@@ -34,7 +38,7 @@ class NovelEditorSystem:
                 )
 
         file_handler = logging.FileHandler(
-                filename=os.path.join(log_dir, "system_operations.log"),
+                filename=os.path.join(log_dir, log_filename),
                 encoding="utf-8"
                 )
         file_handler.setFormatter(formatter)
@@ -93,33 +97,63 @@ class NovelEditorSystem:
 
     def _execute_processing_task(self):
         """执行处理任务"""
-        print("\n▶ 正在启动文段理解处理模式...")
+        logging.info("正在启动文段理解处理模式...")
 
         try:
-            # 加载系统提示
-            prompt_path = self.task_profiles[1]["prompt_path"]
-            with open(prompt_path, "r", encoding="utf-8") as f:
-                system_prompt = f.read()
+            if len(self.task_profiles) <= 1 or "prompt_path" not in self.task_profiles[1]:
+                print("\n❌ 配置文件中缺少有效的提示文件路径")
+                return
+
+            prompt_path = self.task_profiles[1].get("prompt_path")
+            if not os.path.isfile(prompt_path):
+                print(f"\n❌ 提示文件路径无效或文件不存在: {prompt_path}")
+                return
+
+            try:
+                with open(prompt_path, "r", encoding="utf-8") as objt_file:
+                    system_prompt = objt_file.read()
+            except IOError as exception_IOError:
+                print(f"\n❌ 无法读取提示文件: {exception_IOError}")
+                return
 
             # 加载用户内容
-            content = self._load_user_content()
+            try:
+                content = self._load_user_content()
+                if not content:
+                    print("\n❌ 用户内容为空，无法继续处理")
+                    return
+            except Exception as exception_Exception:
+                print(f"\n❌ 加载用户内容时发生错误: {exception_Exception}")
+                return
 
             # 执行处理流程
-            result_path = self._generate_result_path()
+            try:
+                result_path = self._generate_result_path()
+                if not result_path:
+                    print("\n❌ 结果文件路径生成失败")
+                    return
+            except Exception as exception_Exception:
+                print(f"\n❌ 生成结果文件路径时发生错误: {exception_Exception}")
+                return
+
             self._process_content(content, system_prompt, result_path)
 
             print(f"\n✅ 处理完成！结果文件已保存至:\n{result_path}")
 
-        except Exception as e:
-            print(f"\n❌ 处理过程中发生错误: {str(e)}")
+        except FileNotFoundError as file_not_found_exception:
+            print(f"\n❌ 文件未找到: {file_not_found_exception}")
+        except KeyError as key_error_exception:
+            print(f"\n❌ 配置文件中缺少必要的键: {key_error_exception}")
+        except Exception as exception_exception:
+            print(f"\n❌ 处理过程中发生未知错误: {exception_exception}")
 
     @staticmethod
     def _load_user_content():
         """加载用户内容"""
         data_path = os.path.join("data", "data_MAIN_Info.md")
         try:
-            with open(data_path, "r", encoding="utf-8") as f:
-                content = f.read()
+            with open(data_path, "r", encoding="utf-8") as objt_file:
+                content = objt_file.read()
             if not content:
                 raise ValueError("输入文件为空")
             # 增加基本格式验证
@@ -133,7 +167,7 @@ class NovelEditorSystem:
     def _generate_result_path():
         """生成结果文件路径"""
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename = f"Result_Processed_{timestamp}.md"
+        filename = f"Result_{timestamp}.md"
         return os.path.join("results", filename)
 
     def _process_content(self, content, system_prompt, result_path):
@@ -150,12 +184,32 @@ class NovelEditorSystem:
                     raise RuntimeError(f"网络连接失败: {str(ce)}")
                 except ValueError as ve:
                     raise RuntimeError(f"API 返回无效数据: {str(ve)}")
-                except Exception as e:
-                    raise RuntimeError(f"未知错误: {str(e)}")
+                except Exception as exception_exception:
+                    raise RuntimeError(f"未知错误: {str(exception_exception)}")
 
                 result_file.write(f"{processed}\n\n")
                 progress = min((i + chunk_size) / total_chars * 100, 100)
                 print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
+
+
+def safe_load_file(path, error_message):
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            return file.read()
+    except IOError as exception_IOError:
+        logging.error(f"{error_message}: {exception_IOError}")
+        return None
+
+
+def safe_call(func, *args, error_message="调用失败"):
+    try:
+        result = func(*args)
+        if not result:
+            logging.error(error_message)
+        return result
+    except Exception as exception_exception:
+        logging.error(f"{error_message}: {exception_exception}")
+        return None
 
 
 if __name__ == "__main__":
@@ -170,10 +224,9 @@ if __name__ == "__main__":
 
         NovelEditorSystem().run()
 
+    except FileNotFoundError as e:
+        print(f"\n❌ 文件未找到: {e}")
+    except KeyError as e:
+        print(f"\n❌ 配置文件中缺少必要的键: {e}")
     except Exception as e:
-        print(f"\n❗ 系统启动失败: {str(e)}")
-        print("建议检查：")
-        print("1. API密钥有效性")
-        print("2. 网络连接状态")
-        print("3. 必要文件是否存在")
-        input("按任意键退出...")
+        print(f"\n❌ 处理过程中发生未知错误: {e}")
