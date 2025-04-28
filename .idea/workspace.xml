@@ -66,7 +66,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745817240542</updated>
-      <workItem from="1745817241625" duration="8600000" />
+      <workItem from="1745817241625" duration="8927000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool.">
       <option name="closed" value="true" />
@@ -100,7 +100,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745823355477</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Also updated IDE configuration files to reflect task changes.">
+      <option name="closed" value="true" />
+      <created>1745826002703</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1745826002703</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -109,6 +117,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool." />
     <MESSAGE value="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing." />
+    <MESSAGE value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Also updated IDE configuration files to reflect task changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Also updated IDE configuration files to reflect task changes." />
   </component>
 </project>

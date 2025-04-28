@@ -53,7 +53,7 @@ class NovelEditorSystem:
             "text": "系统提示目录",
             "data": "输入数据目录",
             "results": "处理结果目录",
-            "logs/main": "系统日志目录"
+            "logs": "系统日志目录"
             }
 
         for dir_name, desc in required_dirs.items():
@@ -73,6 +73,7 @@ class NovelEditorSystem:
     @staticmethod
     def _show_menu():
         """显示交互菜单"""
+
         print("\n" + "=" * 40)
         print(" DeepSeek小说编辑系统 ".center(40, "★"))
         print("=" * 40)
@@ -83,17 +84,21 @@ class NovelEditorSystem:
     def run(self):
         """主运行循环"""
         while True:
+            self.logger.info("主程序启动，显示交互菜单")
             self._show_menu()
             choice = input("请选择操作编号: ").strip()
+            self.logger.info(f"用户输入: {choice}选项，开始执行。")
 
             if choice == "0":
                 print("\n系统已安全退出")
+                self.logger.info("用户自行退出程序。")
                 break
-
             if choice == "1":
                 self._execute_processing_task()
+                self.logger.info("文段理解处理模式已开启")
             else:
                 print("无效的选项，请重新输入")
+                self.logger.warnning("用户输入无效选项，提示重新输入。")
 
     def _execute_processing_task(self):
         """执行处理任务"""
