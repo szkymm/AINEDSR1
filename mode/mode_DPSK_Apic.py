@@ -20,11 +20,13 @@ class AuthenticationError(APIClientError):
 class ClassDeepSeekHand:
     """独立的API处理模块"""
 
-    def __init__(self):
+    def __init__(self,logger=None):
         self.client = None
         self.logger = None
         self._init_client()
         self._init_logger()
+        self.logger = logger or logging.getLogger("DeepSeekHand")
+        self.api_key = self._load_api_key()
 
     def _init_client(self):
         """初始化API客户端"""
@@ -39,8 +41,7 @@ class ClassDeepSeekHand:
         except Exception as e:
             raise RuntimeError(f"API初始化失败: {str(e)}")
 
-    @staticmethod
-    def _load_api_key():
+    def _load_api_key(self):
         """加载API密钥"""
         api_key = os.getenv("DEEPSEEK_API_KEY")
         if not api_key:
@@ -50,8 +51,13 @@ class ClassDeepSeekHand:
                     api_key = f.read().strip()
                     if not api_key:
                         raise ValueError("API密钥文件为空")
-            except FileNotFoundError:
+                    self.logger.info("成功加载API密钥")  # 使用外部传入的日志记录器
+            except FileNotFoundError as f:
+                self.logger.error(f"加载API密钥失败: {str(f)}", exc_info=True)
                 raise RuntimeError(f"API密钥文件未找到：{key_path}")
+            except Exception as e:
+                self.logger.error(f"加载API密钥失败: {str(e)}", exc_info=True)
+                raise RuntimeError(f"无法加载API密钥，请检查配置文件。")
         return api_key
 
     def _init_logger(self):
@@ -99,6 +105,7 @@ class ClassDeepSeekHand:
 
     def process_request(self, system_prompt, user_content):
         try:
+            self.logger.info("正在发送请求到DeepSeek API")  # 使用外部传入的日志记录器
             response = self.client.chat.completions.create(
                     model="deepseek-chat",
                     messages=[
@@ -109,8 +116,11 @@ class ClassDeepSeekHand:
                     max_tokens=2000,
                     stream=False
                     )
+
+
             if not response.choices or not hasattr(response.choices[0], "message"):
                 raise ValueError("API返回的数据结构不符合预期")
+            self.logger.info("API请求成功，返回数据已处理")
             self.logger.info(f"成功处理 {len(user_content)} 字符的请求")
             return response.choices[0].message.content
         except Exception as e:

@@ -16,9 +16,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2wLOA7T6nXDnMWriENVc7T6aTMA" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -29,28 +29,28 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "GitStage.ChangesTree.GroupingKeys": [
-      "directory",
-      "module",
-      "repository"
+  &quot;keyToStringList&quot;: {
+    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;,
+      &quot;module&quot;,
+      &quot;repository&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -66,7 +66,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745817240542</updated>
-      <workItem from="1745817241625" duration="2043000" />
+      <workItem from="1745817241625" duration="5675000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool.">
       <option name="closed" value="true" />
@@ -76,7 +76,23 @@
       <option name="project" value="LOCAL" />
       <updated>1745818385642</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing.">
+      <option name="closed" value="true" />
+      <created>1745819333236</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745819333236</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing.">
+      <option name="closed" value="true" />
+      <created>1745819375697</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745819375697</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -84,6 +100,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool." />
+    <MESSAGE value="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing." />
   </component>
 </project>

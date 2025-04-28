@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
 import os
 from datetime import datetime
 
@@ -10,12 +11,36 @@ class NovelEditorSystem:
     """主业务逻辑模块"""
 
     def __init__(self):
-        self.api_handler = ClassDeepSeekHand()
+        self.logger = None
+        self._init_logger()  # 初始化系统日志
+        self.api_handler = ClassDeepSeekHand(logger=self.logger)  # 传递日志记录器
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self._init_directories()
         self.task_profiles = {
             1: self._load_task_profile("文段理解处理", "text_PUP_Tas.md", 60)
             }
+
+    def _init_logger(self):
+        """初始化系统日志"""
+        self.logger = logging.getLogger("NovelEditorSystem")
+        self.logger.setLevel(logging.INFO)
+
+        log_dir = os.path.join(self.base_dir, "logs", "main")
+        os.makedirs(log_dir, exist_ok=True)
+
+        formatter = logging.Formatter(
+                '[%(asctime)s] %(levelname)s - %(message)s',
+                datefmt='%Y-%m-%d %H:%M:%S'
+                )
+
+        file_handler = logging.FileHandler(
+                filename=os.path.join(log_dir, "system_operations.log"),
+                encoding="utf-8"
+                )
+        file_handler.setFormatter(formatter)
+
+        if not any(isinstance(h, logging.FileHandler) for h in self.logger.handlers):
+            self.logger.addHandler(file_handler)
 
     def _init_directories(self):
         """初始化目录结构"""
@@ -37,11 +62,12 @@ class NovelEditorSystem:
         """加载任务配置"""
         return {
             "name": name,
-            "prompt_path": os.path.join("text", prompt_file),
+            "prompt_path": os.path.join(self.base_dir, "text", prompt_file),
             "chunk_size": chunk_size
             }
 
-    def _show_menu(self):
+    @staticmethod
+    def _show_menu():
         """显示交互菜单"""
         print("\n" + "=" * 40)
         print(" DeepSeek小说编辑系统 ".center(40, "★"))
@@ -87,7 +113,8 @@ class NovelEditorSystem:
         except Exception as e:
             print(f"\n❌ 处理过程中发生错误: {str(e)}")
 
-    def _load_user_content(self):
+    @staticmethod
+    def _load_user_content():
         """加载用户内容"""
         data_path = os.path.join("data", "data_MAIN_Info.md")
         try:
@@ -95,11 +122,15 @@ class NovelEditorSystem:
                 content = f.read()
             if not content:
                 raise ValueError("输入文件为空")
+            # 增加基本格式验证
+            if not content.strip().startswith("#"):  # 假设文件应以 Markdown 标题开头
+                raise ValueError("文件格式不正确，可能缺少标题")
             return content
         except FileNotFoundError:
             raise RuntimeError(f"未找到输入文件: {data_path}")
 
-    def _generate_result_path(self):
+    @staticmethod
+    def _generate_result_path():
         """生成结果文件路径"""
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"Result_Processed_{timestamp}.md"
@@ -115,8 +146,12 @@ class NovelEditorSystem:
                 chunk = content[i:i + chunk_size]
                 try:
                     processed = self.api_handler.process_request(system_prompt, chunk)
+                except ConnectionError as ce:
+                    raise RuntimeError(f"网络连接失败: {str(ce)}")
+                except ValueError as ve:
+                    raise RuntimeError(f"API 返回无效数据: {str(ve)}")
                 except Exception as e:
-                    raise RuntimeError(f"处理中断: {str(e)}")
+                    raise RuntimeError(f"未知错误: {str(e)}")
 
                 result_file.write(f"{processed}\n\n")
                 progress = min((i + chunk_size) / total_chars * 100, 100)
