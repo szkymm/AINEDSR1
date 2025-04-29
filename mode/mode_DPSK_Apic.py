@@ -67,8 +67,8 @@ class ClassDeepSeekHand:
     def _verify_connection(self):
         try:
             self.client.chat.completions.create(
-                    model="deepseek-chat",
-                    messages=[{"role": "system", "content": "connection test"}],
+                    model="deepseek-reasoner",
+                    messages=[{"role": "user", "content": "connection test"}],
                     max_tokens=1
                     )
         except openai.AuthenticationError as e:
@@ -82,13 +82,13 @@ class ClassDeepSeekHand:
         try:
             self.logger.info("正在发送请求到DeepSeek API")  # 使用外部传入的日志记录器
             response = self.client.chat.completions.create(
-                    model="deepseek-chat",
+                    model="deepseek-reasoner",
                     messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_content}
+                        {"role": "user",
+                         "content": f"[系统指令(role:system)]:{system_prompt}\n[用户输入(role:user)]:{user_content}"}
                         ],
                     temperature=0.7,
-                    max_tokens=2000,
+                    max_tokens=4096,
                     stream=False
                     )
             if not response.choices or not hasattr(response.choices[0], "message"):

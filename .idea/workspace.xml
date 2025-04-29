@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e74730c5-a410-4be9-99cc-90871fd85294" name="更改" comment="" />
+    <list default="true" id="e74730c5-a410-4be9-99cc-90871fd85294" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/markdown.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/data_MAIN_Info.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AI-Novel_Editor-DeepSeek-R1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AI-Novel_Editor-DeepSeek-R1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mode/mode_DPSK_Apic.py" beforeDir="false" afterPath="$PROJECT_DIR$/mode/mode_DPSK_Apic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/text/text_SYST_Inst.md" beforeDir="false" afterPath="$PROJECT_DIR$/text/text_SYST_Inst.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,30 +41,31 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.配色方案字体",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Settings.Markdown&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "GitStage.ChangesTree.GroupingKeys": [
-      "directory",
-      "module",
-      "repository"
+  &quot;keyToStringList&quot;: {
+    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;,
+      &quot;module&quot;,
+      &quot;repository&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AI-Novel_Editor-DeepSeek-R1" />
@@ -94,6 +104,7 @@
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="e74730c5-a410-4be9-99cc-90871fd85294" name="更改" comment="" />
@@ -106,7 +117,9 @@
       <workItem from="1745828358489" duration="356000" />
       <workItem from="1745828737922" duration="1096000" />
       <workItem from="1745829863509" duration="1669000" />
-      <workItem from="1745842657292" duration="1592000" />
+      <workItem from="1745842657292" duration="8580000" />
+      <workItem from="1745939138423" duration="860000" />
+      <workItem from="1745948869670" duration="514000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool.">
       <option name="closed" value="true" />
@@ -156,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745826487403</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Refactor error handling and enhance logging in the NovelEditorSystem&#10;&#10;Improved error management by adding specific exception handling for file operations and API calls, introduced dynamic log file naming, and enhanced user feedback for invalid configurations. Updated IDE settings and added a new instruction file for system processing guidelines.">
+      <option name="closed" value="true" />
+      <created>1745844707944</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1745844707944</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,9 +188,10 @@
     <MESSAGE value="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing." />
     <MESSAGE value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Also updated IDE configuration files to reflect task changes." />
     <MESSAGE value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Updated IDE configuration files and main program logic to reflect these changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Updated IDE configuration files and main program logic to reflect these changes." />
+    <MESSAGE value="Refactor error handling and enhance logging in the NovelEditorSystem&#10;&#10;Improved error management by adding specific exception handling for file operations and API calls, introduced dynamic log file naming, and enhanced user feedback for invalid configurations. Updated IDE settings and added a new instruction file for system processing guidelines." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor error handling and enhance logging in the NovelEditorSystem&#10;&#10;Improved error management by adding specific exception handling for file operations and API calls, introduced dynamic log file naming, and enhanced user feedback for invalid configurations. Updated IDE settings and added a new instruction file for system processing guidelines." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AI_Novel_Editor_DeepSeek_R1$main.coverage" NAME="main 覆盖结果" MODIFIED="1745844120425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AI_Novel_Editor_DeepSeek_R1$main.coverage" NAME="main 覆盖结果" MODIFIED="1745939638444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
