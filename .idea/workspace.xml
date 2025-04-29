@@ -119,7 +119,7 @@
       <workItem from="1745829863509" duration="1669000" />
       <workItem from="1745842657292" duration="8580000" />
       <workItem from="1745939138423" duration="860000" />
-      <workItem from="1745948869670" duration="2918000" />
+      <workItem from="1745948869670" duration="4587000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool.">
       <option name="closed" value="true" />
@@ -185,7 +185,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745949697997</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Update project configuration and remove sample data files&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and removed unused sample data files (`data_MAIN_Info.md` and `data_PRMR_Info.md`) to clean up the project directory. Adjusted task profiles and metadata to ensure consistency with recent changes.">
+      <option name="closed" value="true" />
+      <created>1745951897656</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1745951897656</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,9 +217,10 @@
     <MESSAGE value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Updated IDE configuration files and main program logic to reflect these changes." />
     <MESSAGE value="Refactor error handling and enhance logging in the NovelEditorSystem&#10;&#10;Improved error management by adding specific exception handling for file operations and API calls, introduced dynamic log file naming, and enhanced user feedback for invalid configurations. Updated IDE settings and added a new instruction file for system processing guidelines." />
     <MESSAGE value="Update project configuration and enhance error handling&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and added detailed logging enhancements in `main.py`. Introduced specific exception handling for file operations and API calls, along with improved user feedback and dynamic log file naming. Adjusted task profiles and processing logic to ensure better validation and error reporting throughout the system." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update project configuration and enhance error handling&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and added detailed logging enhancements in `main.py`. Introduced specific exception handling for file operations and API calls, along with improved user feedback and dynamic log file naming. Adjusted task profiles and processing logic to ensure better validation and error reporting throughout the system." />
+    <MESSAGE value="Update project configuration and remove sample data files&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and removed unused sample data files (`data_MAIN_Info.md` and `data_PRMR_Info.md`) to clean up the project directory. Adjusted task profiles and metadata to ensure consistency with recent changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update project configuration and remove sample data files&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and removed unused sample data files (`data_MAIN_Info.md` and `data_PRMR_Info.md`) to clean up the project directory. Adjusted task profiles and metadata to ensure consistency with recent changes." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AI_Novel_Editor_DeepSeek_R1$main.coverage" NAME="main 覆盖结果" MODIFIED="1745951809168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AI_Novel_Editor_DeepSeek_R1$main.coverage" NAME="main 覆盖结果" MODIFIED="1745953100007" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

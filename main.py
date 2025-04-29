@@ -207,7 +207,8 @@ class NovelEditorSystem:
                     self.logger.error(f"❌ 发生了未知错误，代码：{str(exception_exception)}")
                     raise RuntimeError(f"❌ 未知错误: {str(exception_exception)}")
 
-                result_file.write(f"\n---\n[思考<think>]\n{reasoning}\n</think>---\n{processed}\n---\n" + "=" * 40 + "\n\n")
+                result_content = f"```html\n===\n[思考]\n<think>\n{reasoning}\n</think>\n\n---\n\n{processed}\n===\n\n"
+                result_file.write(f"{result_content}" + "▲▽△▼" * 15 + "\n\n")
 
                 progress = min((i + chunk_size_lines) / len(lines) * 100, 100)
                 print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
