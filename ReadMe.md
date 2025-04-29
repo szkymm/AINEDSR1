@@ -2,11 +2,10 @@
 <h4 align="center">The AI Novel Editing System is an intelligent fiction processing tool built upon the DeepSeek API. </h4>
 This system is designed to help users automatically analyze and comprehend novel texts, while generating structured output files.  
 
-Acknowledgments: We extend our gratitude to DeepSeek and the ShenDu QiuSuo (深度求索) team for creating such exceptional AI technologies.
+Acknowledgments: We extend our gratitude to DeepSeek and the ShenDu QiuSuo (深度求索) team for creating such exceptional
+AI technologies.
 <p  align="center">
-<a href="https://pypi.org/manage/project/AzurLaneToolLib/release/0.6.2/"><img src="https://img.shields.io/pypi/v/azurlanetoollib"></a>
 <a href="https://www.gnu.org/licenses/quick-guide-gplv3.zh-cn.html"><img src="https://img.shields.io/pypi/l/azurlanetoollib?color=green"></a>
-<img src="https://img.shields.io/pypi/dd/azurlanetoollib?color=yellow">
 </p>
 <hr />
 
@@ -68,8 +67,8 @@ AI-Novel_Editor-DeepSeek-R1
    ```
 
 4. 配置API密钥：
-    - 创建 `config/api_key.txt` 文件并将你的 DeepSeek API 密钥写入其中。
-    - 或者，设置环境变量 `DEEPSEEK_API_KEY`。
+   - 创建 `config/api_key.txt` 文件并将你的 DeepSeek API 密钥写入其中。
+   - 或者，设置环境变量 `DEEPSEEK_API_KEY`。
 
 ### 使用方法
 

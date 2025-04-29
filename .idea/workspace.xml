@@ -20,10 +20,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="WARN_ABOUT_LARGE_FILES_LIMIT_MB" value="30" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="b27489b7-dc3d-4b9d-8097-9056e2e775b6" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://D:/Programs/Python/Python311/tcl/tcl8.6/tzdata/Africa/Douala" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="PerforceDirect.Settings">
+    <option name="CHARSET" value="none" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -55,7 +69,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -105,6 +119,9 @@
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\MattBrown\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="e74730c5-a410-4be9-99cc-90871fd85294" name="更改" comment="" />
@@ -119,7 +136,7 @@
       <workItem from="1745829863509" duration="1669000" />
       <workItem from="1745842657292" duration="8580000" />
       <workItem from="1745939138423" duration="860000" />
-      <workItem from="1745948869670" duration="5513000" />
+      <workItem from="1745948869670" duration="6420000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool.">
       <option name="closed" value="true" />
@@ -201,11 +218,37 @@
       <option name="project" value="LOCAL" />
       <updated>1745954025910</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Update project configuration and add ReadMe documentation&#10;&#10;Added a detailed `ReadMe.md` file to document the project's purpose, structure, installation steps, and usage. Updated `.idea/workspace.xml` to reflect changes in task metadata and removed unused instruction files (`text_SYST_Inst.md`) for better project consistency. Adjusted task counters and refined result formatting in preparation for future updates.">
+      <option name="closed" value="true" />
+      <created>1745955125422</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1745955125422</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Git.CommitSignature" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
+    <option name="COLUMN_ID_VISIBILITY">
+      <map>
+        <entry key="Table.Git.CommitSignature.ColumnIdVisibility" value="true" />
+      </map>
+    </option>
+    <option name="SHOW_ROOT_NAMES" value="true" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -219,6 +262,11 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT_PROFILE" value="Default" />
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
+    <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
+    <option name="MARK_IGNORED_AS_EXCLUDED" value="true" />
     <MESSAGE value="Add initial project structure and core functionality&#10;&#10;Introduce the main application framework including IDE configuration files, a primary processing module, and the core novel editing system logic. The commit establishes the necessary directory setup, API integration, and user interaction flow for the DeepSeek-based text processing tool." />
     <MESSAGE value="Refactor API client and enhance error handling&#10;&#10;Introduced custom exceptions for better error management in the API client, updated IDE configuration files for improved project setup, and added logging enhancements. Also, refined the connection verification process and excluded virtual environment directories from indexing." />
     <MESSAGE value="Refactor error handling and improve logging in the NovelEditorSystem&#10;&#10;Enhanced error management by introducing specific exception handling for file operations and API calls, added dynamic log file naming, and improved user feedback for missing or invalid configurations. Also updated IDE configuration files to reflect task changes." />
@@ -227,7 +275,11 @@
     <MESSAGE value="Update project configuration and enhance error handling&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and added detailed logging enhancements in `main.py`. Introduced specific exception handling for file operations and API calls, along with improved user feedback and dynamic log file naming. Adjusted task profiles and processing logic to ensure better validation and error reporting throughout the system." />
     <MESSAGE value="Update project configuration and remove sample data files&#10;&#10;Updated the Python SDK reference in `.idea` files to reflect a new interpreter configuration and removed unused sample data files (`data_MAIN_Info.md` and `data_PRMR_Info.md`) to clean up the project directory. Adjusted task profiles and metadata to ensure consistency with recent changes." />
     <MESSAGE value="Update project configuration and clean up sample data files&#10;&#10;Updated the Python SDK reference in `.idea` files, removed unused sample data files (`data_MAIN_Info.md` and `data_PRMR_Info.md`), and adjusted task metadata for consistency. Also refined result formatting in `main.py` to improve readability and structure." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update project configuration and clean up sample data files&#10;&#10;Updated the Python SDK reference in `.idea` files, removed unused sample data files (`data_MAIN_Info.md` and `data_PRMR_Info.md`), and adjusted task metadata for consistency. Also refined result formatting in `main.py` to improve readability and structure." />
+    <MESSAGE value="Update project configuration and add ReadMe documentation&#10;&#10;Added a detailed `ReadMe.md` file to document the project's purpose, structure, installation steps, and usage. Updated `.idea/workspace.xml` to reflect changes in task metadata and removed unused instruction files (`text_SYST_Inst.md`) for better project consistency. Adjusted task counters and refined result formatting in preparation for future updates." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update project configuration and add ReadMe documentation&#10;&#10;Added a detailed `ReadMe.md` file to document the project's purpose, structure, installation steps, and usage. Updated `.idea/workspace.xml` to reflect changes in task metadata and removed unused instruction files (`text_SYST_Inst.md`) for better project consistency. Adjusted task counters and refined result formatting in preparation for future updates." />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AI_Novel_Editor_DeepSeek_R1$main.coverage" NAME="main 覆盖结果" MODIFIED="1745953100007" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
