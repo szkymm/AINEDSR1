@@ -95,7 +95,7 @@ class ClassDeepSeekHand:
                 raise ValueError("API返回的数据结构不符合预期")
             self.logger.info("API请求成功，返回数据已处理")
             self.logger.info(f"成功处理 {len(user_content)} 字符的请求")
-            return response.choices[0].message.content
+            return response.choices[0].message.content, response.choices[0].message.reasoning_content
         except Exception as e:
             self.logger.error(f"请求处理失败: {str(e)}")
             raise

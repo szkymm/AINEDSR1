@@ -79,6 +79,8 @@ class NovelEditorSystem:
         print("=" * 40)
 
     def run(self):
+        print("程序启动 ❗")
+        self.logger.info("脚本开始运行。")
         while True:
             self.logger.info("主程序启动，显示交互菜单。")
             self._show_menu()
@@ -89,9 +91,9 @@ class NovelEditorSystem:
                 self.logger.info("❗ 用户自行退出程序。")
                 break
             if choice == "1":
-                self._execute_processing_task()
                 self.logger.info("💬 文段理解处理模式已开启。")
                 print("💬 用户选择1，文段理解处理模式已开启。")
+                self._execute_processing_task()
             else:
                 self.logger.warning("❌ 用户输入无效选项，提示重新输入。")
                 print("❌ 无效的选项，请重新输入。")
@@ -145,6 +147,8 @@ class NovelEditorSystem:
                 self.logger.error(f"❌ 生成结果文件路径时发生错误: {exception_Exception}。")
                 print(f"\n❌ 生成结果文件路径时发生错误: {exception_Exception}。")
                 return
+            self.logger.info("💬 开始发送文段，进行处理。")
+            print("💬 开始发送文段，进行处理。")
             self._process_content(content, system_prompt, result_path)
             self.logger.info(f"✅ 处理结束，结果输出至: {result_path}。")
             print(f"\n✅ 处理完成！结果文件已保存至:\n{result_path}。")
@@ -192,7 +196,7 @@ class NovelEditorSystem:
                 chunk_lines = lines[i:i + chunk_size_lines]
                 chunk = '\n'.join(chunk_lines)  # 将多行合并成一个字符串块
                 try:
-                    processed = self.api_handler.process_request(system_prompt, chunk)
+                    processed, reasoning = self.api_handler.process_request(system_prompt, chunk)
                 except ConnectionError as ce:
                     self.logger.error(f"❌ 网络连接失败：{str(ce)}")
                     raise RuntimeError(f"❌ 网络连接失败: {str(ce)}")
@@ -203,46 +207,24 @@ class NovelEditorSystem:
                     self.logger.error(f"❌ 发生了未知错误，代码：{str(exception_exception)}")
                     raise RuntimeError(f"❌ 未知错误: {str(exception_exception)}")
 
-                result_file.write(f"{processed}\n---\n\n")
+                result_file.write(f"\n---\n[思考<think>]\n{reasoning}\n</think>---\n{processed}\n---\n" + "=" * 40 + "\n\n")
 
                 progress = min((i + chunk_size_lines) / len(lines) * 100, 100)
                 print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
             self.logger.info("✅ 处理结束。")
-        print("✅ 文段处理结束。")
-
-
-def safe_load_file(path, error_message):
-    try:
-        with open(path, "r", encoding="utf-8") as file:
-            return file.read()
-    except IOError as exception_IOError:
-        logging.error(f"❌ {error_message}: {exception_IOError}")
-        return None
-
-
-def safe_call(func, *args, error_message="调用失败"):
-    try:
-        result = func(*args)
-        if not result:
-            logging.error(error_message)
-        return result
-    except Exception as exception_exception:
-        logging.error(f"❌ {error_message}: {exception_exception}")
-        return None
 
 
 if __name__ == "__main__":
     try:
-        # 首次运行检查
         if not os.path.exists("config/api_key.txt"):
             print("首次使用配置指南：")
             api_key = input("请输入DeepSeek API密钥: ").strip()
             with open("config/api_key.txt", "w") as f:
                 f.write(api_key)
             print("密钥已安全存储")
-
+        else:
+            print("API密钥已存在，脚本程序启动！")
         NovelEditorSystem().run()
-
     except FileNotFoundError as e:
         print(f"\n❌ 文件未找到: {e}")
     except KeyError as e:
