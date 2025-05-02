@@ -90,7 +90,7 @@ class NovelEditorSystem:
                 print("\n❗ 系统已安全退出。")
                 self.logger.info("❗ 用户自行退出程序。")
                 break
-            if choice == "1":
+            elif choice == "1":
                 self.logger.info("💬 文段理解处理模式已开启。")
                 print("💬 用户选择1，文段理解处理模式已开启。")
                 self._execute_processing_task()
@@ -192,6 +192,7 @@ class NovelEditorSystem:
         chunk_size_lines = self.task_profiles[1]["chunk_size"]
 
         with open(result_path, "w", encoding="utf-8") as result_file:
+            result_file.write("# DeepSeek-R1处理结果\n")
             for i in range(0, len(lines), chunk_size_lines):
                 chunk_lines = lines[i:i + chunk_size_lines]
                 chunk = '\n'.join(chunk_lines)  # 将多行合并成一个字符串块
@@ -206,8 +207,9 @@ class NovelEditorSystem:
                 except Exception as exception_exception:
                     self.logger.error(f"❌ 发生了未知错误，代码：{str(exception_exception)}")
                     raise RuntimeError(f"❌ 未知错误: {str(exception_exception)}")
-
-                result_content = f"```html\n===\n[思考]\n<think>\n{reasoning}\n</think>\n\n---\n\n{processed}\n===\n\n"
+                reason_content = "<br>".join(reasoning.splitlines()).replace("<br><br>", "<br>")
+                processed_content = "  \n".join(processed.splitlines()).replace("  \n  \n", "  \n")
+                result_content = f"---\n[思考]\n<think>{reason_content}</think>\n\n---\n\n{processed_content}\n===\n\n"
                 result_file.write(f"{result_content}" + "▲▽△▼" * 15 + "\n\n")
 
                 progress = min((i + chunk_size_lines) / len(lines) * 100, 100)
