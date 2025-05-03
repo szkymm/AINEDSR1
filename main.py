@@ -1,50 +1,52 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
-import os
+import re
 import sys
 from datetime import datetime
+from pathlib import Path
 
 from mode.mode_DPSK_Apic import ClassDeepSeekHand
 
 
 class NovelEditorSystem:
-    """主业务逻辑模块"""
-
     def __init__(self):
-        self.base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        self.base_dir = Path(sys.argv[0]).resolve().parent
+        self.data_dir = self.base_dir / "data"
+        self.results_dir = self.base_dir / "results"
         self.logger = None
-        self._init_logger()  # 初始化系统日志
-        self.api_handler = ClassDeepSeekHand(logger=self.logger)  # 传递日志记录器
+        self.api_handler = None
+        self._init_logger()
+        self._init_api_handler()
         self._init_directories()
         self.task_profiles = {
-            1: self._load_task_profile("文段理解处理", os.path.join(self.base_dir, "text", "text_SYST_Inst.md"), 20)
+            1: self._load_task_profile("文段理解处理", "text_SYST_Inst.md", 20)
             }
 
     def _init_logger(self):
         self.logger = logging.getLogger("NovelEditorSystem")
         self.logger.setLevel(logging.INFO)
-
-        log_dir = os.path.join(self.base_dir, "logs")
-        os.makedirs(log_dir, exist_ok=True)
-
-        # 生成符合格式的日志文件名
+        log_dir = self.base_dir / "logs"
+        log_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%m%d_%H%M")
         log_filename = f"logs_{timestamp}.log"
-
         formatter = logging.Formatter(
                 '[%(asctime)s] %(levelname)s - %(message)s',
                 datefmt='%Y-%m-%d %H:%M:%S'
                 )
-
-        file_handler = logging.FileHandler(
-                filename=os.path.join(log_dir, log_filename),
-                encoding="utf-8"
-                )
+        file_handler = logging.FileHandler(log_dir / log_filename, encoding="utf-8")
         file_handler.setFormatter(formatter)
-
         if not any(isinstance(h, logging.FileHandler) for h in self.logger.handlers):
             self.logger.addHandler(file_handler)
+        self.logger.info("✅ 日志处理器初始化正常、结束。")
+
+    def _init_api_handler(self):
+        try:
+            self.api_handler = ClassDeepSeekHand(logger=self.logger)
+            self.logger.info("✅ API处理器初始化正常、结束。")
+        except Exception as exception_error:
+            self.logger.error(f"API处理器初始化失败: {exception_error}")
+            raise RuntimeError("API处理器初始化失败，请检查配置文件和网络连接。")
 
     def _init_directories(self):
         required_dirs = {
@@ -54,18 +56,17 @@ class NovelEditorSystem:
             "results": "处理结果目录",
             "logs": "系统日志目录"
             }
-
         for dir_name, desc in required_dirs.items():
-            full_path = os.path.join(self.base_dir, dir_name)
-            if not os.path.exists(full_path):
-                os.makedirs(full_path)
+            full_path = self.base_dir / dir_name
+            if not full_path.exists():
+                full_path.mkdir()
                 self.logger.info(f"已创建 {desc}: {full_path}")
                 print(f"已创建 {desc}: {full_path}")
 
     def _load_task_profile(self, name, prompt_file, chunk_size):
         return {
             "name": name,
-            "prompt_path": os.path.join(self.base_dir, "text", prompt_file),
+            "prompt_path": self.base_dir / "text" / prompt_file,
             "chunk_size": chunk_size
             }
 
@@ -80,7 +81,7 @@ class NovelEditorSystem:
 
     def run(self):
         print("程序启动 ❗")
-        self.logger.info("脚本开始运行。")
+        self.logger.info("系统初始化正常、结束，脚本开始运行。")
         while True:
             self.logger.info("主程序启动，显示交互菜单。")
             self._show_menu()
@@ -100,137 +101,128 @@ class NovelEditorSystem:
 
     def _execute_processing_task(self):
         try:
-            if len(self.task_profiles) <= 0 or "prompt_path" not in self.task_profiles[1]:
+            task_profile = self.task_profiles.get(1)
+            if not task_profile or "prompt_path" not in task_profile:
                 self.logger.error("❌ 配置文件中缺少有效的提示文件路径。")
                 print("\n❌ 配置文件中缺少有效的提示文件路径。")
                 return
-            prompt_path = self.task_profiles[1].get("prompt_path")
-            self.logger.info(f"✅ 配置文件: {prompt_path}已正常加载。")
-            print(f"✅ 配置文件已正常加载。")
-            if not os.path.isfile(prompt_path):
+            prompt_path = task_profile["prompt_path"]
+            if not prompt_path.exists():
                 self.logger.error(f"❌ 提示文件路径无效或文件不存在: {prompt_path}。")
                 print(f"\n❌ 提示文件路径无效或文件不存在: {prompt_path}。")
                 return
-            try:
-                with open(prompt_path, "r", encoding="utf-8") as objt_file:
-                    system_prompt = objt_file.read()
-                    file_name = prompt_path.split("/")[-1]
-                    self.logger.info(f"✅ 提示文件: {file_name}，正常读取。")
-                    print("✅ 提示文件正常读取。")
-            except IOError as exception_IOError:
-                self.logger.error(f"❌ 无法读取提示文件: {exception_IOError}。")
-                print(f"❌ 无法读取提示文件: {exception_IOError}。")
+            with open(prompt_path, "r", encoding="utf-8") as objt_file:
+                system_prompt = objt_file.read()
+                self.logger.info(f"✅ 提示文件: {prompt_path.name}，正常读取。")
+                print("✅ 提示文件正常读取。")
+            content = self._load_user_content()
+            self.logger.info("💬 开始读取用户内容")
+            if not content:
+                self.logger.error("❌ 用户内容为空，无法继续处理。")
+                print("\n❌ 用户内容为空，无法继续处理。")
                 return
-            try:
-                self.logger.info(f"💬 开始加载用户内容。")
-                print("💬 开始加载用户内容。")
-                content = self._load_user_content()
-                if not content:
-                    self.logger.error("❌ 用户内容为空，无法继续处理。")
-                    print("\n❌ 用户内容为空，无法继续处理。")
-                    return
-                self.logger.info(f"💬 用户内容: {content}")
-                print("✅ 用户内容已读取。")
-            except Exception as exception_Exception:
-                self.logger.error(f"❌ 加载用户内容时发生错误: {exception_Exception}。")
-                print(f"\n❌ 加载用户内容时发生错误: {exception_Exception}。")
+            self.logger.info(f"💬 用户内容为:\n {content}\n")
+            self.logger.info("✅ 用户内容文件正常读取。")
+            result_path = self._generate_result_path()
+            if not result_path:
+                self.logger.error("❌ 结果文件路径生成失败。")
+                print("\n❌ 结果文件路径生成失败。")
                 return
-            try:
-                result_path = self._generate_result_path()
-                if not result_path:
-                    self.logger.error("❌ 结果文件路径生成失败。")
-                    print("\n❌ 结果文件路径生成失败。")
-                    return
-                self.logger.info(f"✅ 结果文件路径已生成: {result_path}。")
-                print("✅ 结果文件路径已生成。")
-            except Exception as exception_Exception:
-                self.logger.error(f"❌ 生成结果文件路径时发生错误: {exception_Exception}。")
-                print(f"\n❌ 生成结果文件路径时发生错误: {exception_Exception}。")
-                return
+            self.logger.info(f"✅ 结果文件：{result_path.name}已生成。")
             self.logger.info("💬 开始发送文段，进行处理。")
             print("💬 开始发送文段，进行处理。")
             self._process_content(content, system_prompt, result_path)
-            self.logger.info(f"✅ 处理结束，结果输出至: {result_path}。")
-            print(f"\n✅ 处理完成！结果文件已保存至:\n{result_path}。")
-        except FileNotFoundError as file_not_found_exception:
-            self.logger.error(f"❌ 文件未找到: {file_not_found_exception}。")
-            print(f"\n❌ 文件未找到: {file_not_found_exception}。")
-        except KeyError as key_error_exception:
-            self.logger.error(f"❌ 配置文件中缺少必要的键: {key_error_exception}。")
-            print(f"\n❌ 配置文件中缺少必要的键: {key_error_exception}。")
-        except Exception as exception_exception:
-            self.logger.error(f"❌ 处理过程中发生未知错误: {exception_exception}。")
-            print(f"\n❌ 处理过程中发生未知错误: {exception_exception}。")
+            self.logger.info(f"✅ 处理结束，结果已保存。")
+            print(f"\n✅ 处理完成！结果文件已保存至:\n{result_path.name}。")
+        except Exception as exception_error:
+            self.logger.error(f"❌ 处理过程中发生未知错误: {exception_error}")
+            print(f"\n❌ 处理过程中发生未知错误: {exception_error}")
 
     def _load_user_content(self):
-        data_path = os.path.join("data", "data_MAIN_Info.md")
-        try:
-            with open(data_path, "r", encoding="utf-8") as objt_file:
-                content = objt_file.read()
-            if not content:
-                self.logger.error("❌ 用户输入文件为空。")
-                raise ValueError("❌ 输入文件为空。")
-            # 增加基本格式验证
-            if not content.strip().startswith("#"):  # 假设文件应以 Markdown 标题开头
-                self.logger.error("❌ 用户输入文件文件格式不正确，可能缺少标题。")
-                raise ValueError("❌ 文件格式不正确，可能缺少标题。")
-            return content
-        except FileNotFoundError:
+        data_path = self.data_dir / "data_PRMR_Info.md"
+        if not data_path.exists():
             self.logger.error(f"❌ 未找到输入文件: {data_path}")
-            raise RuntimeError(f"❌ 未找到输入文件: {data_path}")
+            print(f"\n❌ 未找到输入文件: {data_path}")
+            raise FileExistsError(f"未找到输入文件: {data_path}")
+        with open(data_path, "r", encoding="utf-8") as objt_file:
+            content = objt_file.read()
+        if not content.strip().startswith("#"):
+            self.logger.error("❌ 用户输入文件格式不正确，可能缺少标题。")
+            print("\n❌ 用户输入文件格式不正确，可能缺少标题。")
+            return ""
+        return content
 
-    @staticmethod
-    def _generate_result_path():
-        """生成结果文件路径"""
+    def _generate_result_path(self):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"Result_{timestamp}.md"
-        return os.path.join("results", filename)
+        return self.results_dir / filename
+
+    def extract_optimized_text(self, file_input):
+        try:
+            file_name = file_input.name
+            output_file_name = f"Content_{file_name}.md"
+            with open(file_input, "r", encoding="utf-8") as reading_file:
+                content = reading_file.read()
+            matches = re.findall(r"```plaintext(.*?)```", content, re.DOTALL)
+            if matches:
+                result_content = ""
+                for match in matches:
+                    gain_content = match.strip()
+                    processed_content = "  \n".join(gain_content.splitlines())
+                    processed_content = re.sub(r" {4,}\n", "  \n", processed_content)
+                    result_content += processed_content + "\n\n"
+                output_file_path = self.results_dir / output_file_name
+                with open(output_file_path, "w", encoding="utf-8") as writing_file:
+                    writing_file.write(result_content)
+                print(f"✅ 成功提取并保存所有内容块到文件: {output_file_name}")
+            else:
+                print(f"❌ 未发现匹配的内容块: {file_input}")
+                raise FileExistsError(f"❌ 未发现匹配的内容块: {file_input}")
+        except Exception as exception_error:
+            self.logger.error(f"发现了一个未知错误: {exception_error}")
+            print(f"发现了一个未知错误: {exception_error}")
 
     def _process_content(self, content, system_prompt, result_path):
-        """执行内容处理"""
         lines = content.split('\n')
         chunk_size_lines = self.task_profiles[1]["chunk_size"]
-
+        count_range_number = 0
         with open(result_path, "w", encoding="utf-8") as result_file:
-            result_file.write("# DeepSeek-R1处理结果\n")
-            for i in range(0, len(lines), chunk_size_lines):
-                chunk_lines = lines[i:i + chunk_size_lines]
-                chunk = '\n'.join(chunk_lines)  # 将多行合并成一个字符串块
-                try:
-                    processed, reasoning = self.api_handler.process_request(system_prompt, chunk)
-                except ConnectionError as ce:
-                    self.logger.error(f"❌ 网络连接失败：{str(ce)}")
-                    raise RuntimeError(f"❌ 网络连接失败: {str(ce)}")
-                except ValueError as ve:
-                    self.logger.error(f"❌ API 返回了无效数据：{str(ve)}")
-                    raise RuntimeError(f"❌ API 返回无效数据: {str(ve)}")
-                except Exception as exception_exception:
-                    self.logger.error(f"❌ 发生了未知错误，代码：{str(exception_exception)}")
-                    raise RuntimeError(f"❌ 未知错误: {str(exception_exception)}")
-                reason_content = "<br>".join(reasoning.splitlines()).replace("<br><br>", "<br>")
-                processed_content = "  \n".join(processed.splitlines()).replace("  \n  \n", "  \n")
-                result_content = f"---\n[思考]\n<think>{reason_content}</think>\n\n---\n\n{processed_content}\n===\n\n"
+            result_file.write("# DeepSeek-R1处理结果\n\n")
+        for i in range(0, len(lines), chunk_size_lines):
+            chunk_lines = lines[i:i + chunk_size_lines]
+            chunk = '\n'.join(chunk_lines)
+            count_range_number += 1
+            try:
+                self.logger.info(f"✅ 第{str(count_range_number)}组已提交，等待API反馈。")
+                processed, reasoning = self.api_handler.process_request(system_prompt, chunk)
+            except Exception as exception_error:
+                self.logger.error(f"❌ 处理请求失败: {exception_error}")
+                print(f"\n❌ 处理请求失败: {exception_error}")
+                return
+            self.logger.info(f"✅ 第{str(count_range_number)}组API已反馈，正在处理写入。")
+            reason_content = "<br>".join(reasoning.splitlines()).replace("<br><br>", "<br>")
+            processed_content = "  \n".join(processed.splitlines()).replace("  \n  \n", "  \n")
+            processed_content = processed_content.replace("  \n", "  \n  \n")
+            result_content = f"---\n[思考]\n<think>{reason_content}</think>\n\n---\n\n{processed_content}\n\n"
+            with open(result_path, "a", encoding="utf-8") as result_file:
                 result_file.write(f"{result_content}" + "▲▽△▼" * 15 + "\n\n")
-
-                progress = min((i + chunk_size_lines) / len(lines) * 100, 100)
-                print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
-            self.logger.info("✅ 处理结束。")
+            self.logger.info(f"✅ 第{str(count_range_number)}组API写入成功。")
+            progress = min((i + chunk_size_lines) / len(lines) * 100, 100)
+            print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
+        self.extract_optimized_text(result_path)
+        self.logger.info("✅ 处理结束。")
 
 
 if __name__ == "__main__":
     try:
-        if not os.path.exists("config/api_key.txt"):
+        if not (Path("config") / "api_key.txt").exists():
             print("首次使用配置指南：")
             api_key = input("请输入DeepSeek API密钥: ").strip()
-            with open("config/api_key.txt", "w") as f:
+            with open(Path("config") / "api_key.txt", "w") as f:
                 f.write(api_key)
             print("密钥已安全存储")
         else:
             print("API密钥已存在，脚本程序启动！")
         NovelEditorSystem().run()
-    except FileNotFoundError as e:
-        print(f"\n❌ 文件未找到: {e}")
-    except KeyError as e:
-        print(f"\n❌ 配置文件中缺少必要的键: {e}")
-    except Exception as e:
-        print(f"\n❌ 处理过程中发生未知错误: {e}")
+    except Exception as error_exception:
+        print(f"\n❌ 处理过程中发生未知错误: {error_exception}")
