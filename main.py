@@ -11,16 +11,20 @@ from mode.mode_DPSK_Apic import ClassDeepSeekHand
 
 class NovelEditorSystem:
     def __init__(self):
-        self.base_dir = Path(sys.argv[0]).resolve().parent
-        self.data_dir = self.base_dir / "data"
-        self.results_dir = self.base_dir / "results"
+        self.base_dir = Path(sys.argv[0]).resolve().parent  # 基础文件夹
+        self.data_dir = self.base_dir / "data"  # 数据文件夹
+        self.text_dir = self.base_dir / "text"  # 指令文件夹
+        self.logs_dir = self.base_dir / "logs"  # 日志文件夹
+        self.results_dir = self.base_dir / "results"  # 结果文件夹
+        self.config_dir = self.base_dir / "config"  # 配置文件夹
         self.logger = None
         self.api_handler = None
         self._init_logger()
         self._init_api_handler()
         self._init_directories()
         self.task_profiles = {
-            1: self._load_task_profile("文段理解处理", "text_SYST_Inst.md", 20)
+            1: self._load_task_profile("文段理解处理", "text_SYST_Inst.md", 20),
+            2: self._load_task_profile("文段整合处理", "text_TAII_Prmt.md", 120),
             }
 
     def _init_logger(self):
@@ -66,16 +70,17 @@ class NovelEditorSystem:
     def _load_task_profile(self, name, prompt_file, chunk_size):
         return {
             "name": name,
-            "prompt_path": self.base_dir / "text" / prompt_file,
+            "prompt_path": self.text_dir / prompt_file,
             "chunk_size": chunk_size
             }
 
     @staticmethod
     def _show_menu():
         print("\n" + "=" * 40)
-        print(" DeepSeek小说编辑系统 ".center(40, "★"))
+        print(" DeepSeek小说编辑系统 ".center(15, "★"))
         print("=" * 40)
         print("[1] 💬 文段理解处理。")
+        print("[2] 💬 文段整合处理。")
         print("[0] ❗ 退出系统。")
         print("=" * 40)
 
@@ -94,14 +99,21 @@ class NovelEditorSystem:
             elif choice == "1":
                 self.logger.info("💬 文段理解处理模式已开启。")
                 print("💬 用户选择1，文段理解处理模式已开启。")
-                self._execute_processing_task()
+                file_data = "data_CTAX_Info.md"
+                self._execute_processing_task(choice, file_data)
+            elif choice == "2":
+                self.logger.info("💬 文段整合处理模式已开启。")
+                print("💬 用户选择2，文段整合处理模式已开启。")
+                file_data = "data_TXAN_Info.md"
+                self._execute_processing_task(choice, file_data)
             else:
                 self.logger.warning("❌ 用户输入无效选项，提示重新输入。")
                 print("❌ 无效的选项，请重新输入。")
 
-    def _execute_processing_task(self):
+    def _execute_processing_task(self, choice_number, file_path):
+        number = int(choice_number)
         try:
-            task_profile = self.task_profiles.get(1)
+            task_profile = self.task_profiles.get(number)
             if not task_profile or "prompt_path" not in task_profile:
                 self.logger.error("❌ 配置文件中缺少有效的提示文件路径。")
                 print("\n❌ 配置文件中缺少有效的提示文件路径。")
@@ -115,7 +127,7 @@ class NovelEditorSystem:
                 system_prompt = objt_file.read()
                 self.logger.info(f"✅ 提示文件: {prompt_path.name}，正常读取。")
                 print("✅ 提示文件正常读取。")
-            content = self._load_user_content()
+            content = self._load_user_content(file_path)
             self.logger.info("💬 开始读取用户内容")
             if not content:
                 self.logger.error("❌ 用户内容为空，无法继续处理。")
@@ -131,15 +143,16 @@ class NovelEditorSystem:
             self.logger.info(f"✅ 结果文件：{result_path.name}已生成。")
             self.logger.info("💬 开始发送文段，进行处理。")
             print("💬 开始发送文段，进行处理。")
-            self._process_content(content, system_prompt, result_path)
+            chunk_size = task_profile["chunk_size"]
+            self._process_content(chunk_size, content, system_prompt, result_path)
             self.logger.info(f"✅ 处理结束，结果已保存。")
             print(f"\n✅ 处理完成！结果文件已保存至:\n{result_path.name}。")
         except Exception as exception_error:
             self.logger.error(f"❌ 处理过程中发生未知错误: {exception_error}")
             print(f"\n❌ 处理过程中发生未知错误: {exception_error}")
 
-    def _load_user_content(self):
-        data_path = self.data_dir / "data_PRMR_Info.md"
+    def _load_user_content(self, data_info):
+        data_path = self.data_dir / data_info
         if not data_path.exists():
             self.logger.error(f"❌ 未找到输入文件: {data_path}")
             print(f"\n❌ 未找到输入文件: {data_path}")
@@ -182,32 +195,31 @@ class NovelEditorSystem:
             self.logger.error(f"发现了一个未知错误: {exception_error}")
             print(f"发现了一个未知错误: {exception_error}")
 
-    def _process_content(self, content, system_prompt, result_path):
+    def _process_content(self, chunk_size, content, system_prompt, result_path):
         lines = content.split('\n')
-        chunk_size_lines = self.task_profiles[1]["chunk_size"]
-        count_range_number = 0
+        range_number = 0
         with open(result_path, "w", encoding="utf-8") as result_file:
             result_file.write("# DeepSeek-R1处理结果\n\n")
-        for i in range(0, len(lines), chunk_size_lines):
-            chunk_lines = lines[i:i + chunk_size_lines]
+        for i in range(0, len(lines), chunk_size):
+            chunk_lines = lines[i:i + chunk_size]
             chunk = '\n'.join(chunk_lines)
-            count_range_number += 1
+            range_number += 1
             try:
-                self.logger.info(f"✅ 第{str(count_range_number)}组已提交，等待API反馈。")
+                self.logger.info(f"✅ 第{str(range_number)}组已提交，等待API反馈。")
                 processed, reasoning = self.api_handler.process_request(system_prompt, chunk)
             except Exception as exception_error:
                 self.logger.error(f"❌ 处理请求失败: {exception_error}")
                 print(f"\n❌ 处理请求失败: {exception_error}")
                 return
-            self.logger.info(f"✅ 第{str(count_range_number)}组API已反馈，正在处理写入。")
+            self.logger.info(f"✅ 第{str(range_number)}组API已反馈，正在处理写入。")
             reason_content = "<br>".join(reasoning.splitlines()).replace("<br><br>", "<br>")
             processed_content = "  \n".join(processed.splitlines()).replace("  \n  \n", "  \n")
             processed_content = processed_content.replace("  \n", "  \n  \n")
             result_content = f"---\n[思考]\n<think>{reason_content}</think>\n\n---\n\n{processed_content}\n\n"
             with open(result_path, "a", encoding="utf-8") as result_file:
                 result_file.write(f"{result_content}" + "▲▽△▼" * 15 + "\n\n")
-            self.logger.info(f"✅ 第{str(count_range_number)}组API写入成功。")
-            progress = min((i + chunk_size_lines) / len(lines) * 100, 100)
+            self.logger.info(f"✅ 第{str(range_number)}组API写入成功。")
+            progress = min((i + chunk_size) / len(lines) * 100, 100)
             print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
         self.extract_optimized_text(result_path)
         self.logger.info("✅ 处理结束。")
