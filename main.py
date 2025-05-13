@@ -23,8 +23,9 @@ class NovelEditorSystem:
         self._init_api_handler()
         self._init_directories()
         self.task_profiles = {
-            1: self._load_task_profile("文段理解处理", "text_SYST_Inst.md", 20),
+            1: self._load_task_profile("文段理解处理", "text_SYST_Inst.md", 30),
             2: self._load_task_profile("文段整合处理", "text_TAII_Prmt.md", 120),
+            3: self._load_task_profile("DeepSeekPython处理", "text_DSPY_Info.md", 30),
             }
 
     def _init_logger(self):
@@ -75,12 +76,13 @@ class NovelEditorSystem:
             }
 
     @staticmethod
-    def _show_menu():
+    def show_menu():
         print("\n" + "=" * 40)
         print(" DeepSeek小说编辑系统 ".center(15, "★"))
         print("=" * 40)
         print("[1] 💬 文段理解处理。")
         print("[2] 💬 文段整合处理。")
+        print("[3] 💬 DeepSeekPython处理。")
         print("[0] ❗ 退出系统。")
         print("=" * 40)
 
@@ -89,7 +91,7 @@ class NovelEditorSystem:
         self.logger.info("系统初始化正常、结束，脚本开始运行。")
         while True:
             self.logger.info("主程序启动，显示交互菜单。")
-            self._show_menu()
+            self.show_menu()
             choice = input("请选择操作编号: ").strip()
             self.logger.info(f"用户输入: {choice}选项，开始执行。")
             if choice == "0":
@@ -105,6 +107,11 @@ class NovelEditorSystem:
                 self.logger.info("💬 文段整合处理模式已开启。")
                 print("💬 用户选择2，文段整合处理模式已开启。")
                 file_data = "data_TXAN_Info.md"
+                self._execute_processing_task(choice, file_data)
+            elif choice == "3":
+                self.logger.info("💬 DeepSeek代码处理模式已开启。")
+                print("💬 用户选择3，DeepSeek代码处理模式已开启。")
+                file_data = "data_DSPY_Info.md"
                 self._execute_processing_task(choice, file_data)
             else:
                 self.logger.warning("❌ 用户输入无效选项，提示重新输入。")
@@ -170,7 +177,7 @@ class NovelEditorSystem:
         filename = f"Result_{timestamp}.md"
         return self.results_dir / filename
 
-    def extract_optimized_text(self, file_input):
+    def _extract_optimized_text(self, file_input):
         try:
             file_name = file_input.name
             output_file_name = f"Content_{file_name}.md"
@@ -221,7 +228,7 @@ class NovelEditorSystem:
             self.logger.info(f"✅ 第{str(range_number)}组API写入成功。")
             progress = min((i + chunk_size) / len(lines) * 100, 100)
             print(f"\r▷ 处理进度: {progress:.1f}%", end="", flush=True)
-        self.extract_optimized_text(result_path)
+        self._extract_optimized_text(result_path)
         self.logger.info("✅ 处理结束。")
 
 
