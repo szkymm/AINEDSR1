@@ -113,6 +113,8 @@ class NovelEditorSystem:
                 print("💬 用户选择3，DeepSeek代码处理模式已开启。")
                 file_data = "data_DSPY_Info.md"
                 self._execute_processing_task(choice, file_data)
+                self.logger.info("💬 脚本已自动退出。")
+                break
             else:
                 self.logger.warning("❌ 用户输入无效选项，提示重新输入。")
                 print("❌ 无效的选项，请重新输入。")
